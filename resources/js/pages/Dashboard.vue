@@ -15,6 +15,7 @@
                             <th scope="col" class="px-6 py-3">Description</th>
                             <th scope="col" class="px-6 py-3">Priority</th>
                             <th scope="col" class="px-6 py-3">Created At</th>
+                            <th scope="col" class="px-6 py-3">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,7 +37,8 @@
                             </td>
                             <td class="px-6 py-4">
                                 <span
-                                    class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100"
+                                    :class="priorityClass(task.priority)"
+                                    class="inline-block px-3 py-1 text-xs font-semibold rounded-full"
                                 >
                                     {{ task.priority }}
                                 </span>
@@ -45,6 +47,14 @@
                                 class="px-6 py-4 text-xs text-gray-500 dark:text-gray-400"
                             >
                                 {{ task.created_at }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <button
+                                    @click="openEditModal(task)"
+                                    class="px-3 py-1 text-xs font-medium text-white bg-green-600 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                >
+                                    Edit
+                                </button>
                             </td>
                         </tr>
                     </tbody>
@@ -125,7 +135,7 @@
                         <option value="">Select Priority</option>
                         <option value="lower">Lower</option>
                         <option value="medium">Medium</option>
-                        <option value="high">High</option>
+                        <option value="higher">Higher</option>
                     </select>
                 </div>
 
@@ -145,6 +155,86 @@
                 </div>
             </div>
         </div>
+
+        <div
+            v-if="showEditModal"
+            class="fixed inset-0 bg-gray-900 bg-opacity-50 dark:bg-opacity-80 flex items-center justify-center z-50"
+            @click.self="showEditModal = false"
+        >
+            <div
+                class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-6 w-11/12 max-w-lg"
+            >
+                <div
+                    class="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-gray-700"
+                >
+                    <h3
+                        class="text-xl font-semibold text-gray-900 dark:text-white"
+                    >
+                        Edit Task
+                    </h3>
+                    <button
+                        @click="showEditModal = false"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                    >
+                        <svg
+                            class="w-5 h-5"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd"
+                            ></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="py-1 text-gray-700 dark:text-gray-300">
+                    <input
+                        type="text"
+                        v-model="title"
+                        placeholder="Task Title"
+                        class="mt-4 w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                    />
+                </div>
+                <div class="py-1 text-gray-700 dark:text-gray-300">
+                    <textarea
+                        cols="2"
+                        v-model="description"
+                        placeholder="Task description"
+                        class="mt-4 w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                    ></textarea>
+                </div>
+                <div class="py-1 text-gray-700 dark:text-gray-300">
+                    <select
+                        class="mt-4 w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                        v-model="priority"
+                    >
+                        <option value="">Select Priority</option>
+                        <option value="lower">Lower</option>
+                        <option value="medium">Medium</option>
+                        <option value="higher">Higher</option>
+                    </select>
+                </div>
+
+                <div class="flex justify-end pt-4">
+                    <button
+                        @click="showEditModal = false"
+                        class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 mr-2"
+                    >
+                        Close
+                    </button>
+                    <button
+                        @click="updateTask"
+                        class="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700"
+                    >
+                        Update Task
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -153,7 +243,9 @@ import { onMounted, ref } from "vue";
 import axios from "axios";
 import router from "@/router";
 const showModal = ref(false);
+const showEditModal = ref(false);
 const tasks = ref([]);
+const editingTask = ref(null);
 
 const title = ref("");
 const description = ref("");
@@ -189,10 +281,48 @@ async function addTask() {
         );
 
         showModal.value = false;
+        title.value = "";
+        description.value = "";
+        priority.value = "";
         fetchData();
     } catch (error) {
         console.error(error);
     }
+}
+
+async function updateTask() {
+    try {
+        await axios.put(
+            `/api/v1/tasks/${editingTask.value.id}`,
+            {
+                title: title.value,
+                description: description.value,
+                priority: priority.value,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+            }
+        );
+
+        showEditModal.value = false;
+        editingTask.value = null;
+        title.value = "";
+        description.value = "";
+        priority.value = "";
+        fetchData();
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function openEditModal(task) {
+    editingTask.value = task;
+    title.value = task.title;
+    description.value = task.description;
+    priority.value = task.priority;
+    showEditModal.value = true;
 }
 
 async function logout() {
@@ -212,6 +342,22 @@ async function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     router.push("/login");
+}
+
+function priorityClass(priority) {
+    switch (priority?.toLowerCase()) {
+        case "lower":
+            return "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100";
+
+        case "medium":
+            return "bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100";
+
+        case "higher":
+            return "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100";
+
+        default:
+            return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200";
+    }
 }
 
 onMounted(() => {
