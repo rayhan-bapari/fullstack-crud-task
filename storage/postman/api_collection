@@ -1,6 +1,6 @@
 {
     "info": {
-        "name": "Laravel",
+        "name": "Inilabs Task",
         "description": "API Documentation",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
@@ -44,7 +44,7 @@
                                         },
                                         "body": {
                                             "mode": "raw",
-                                            "raw": "{\n    \"name\": \"sample_text\",\n    \"email\": \"user46@example.com\",\n    \"password\": \"sample_text\"\n}",
+                                            "raw": "{\n    \"name\": \"sample_text\",\n    \"email\": \"user90@example.com\",\n    \"password\": \"sample_text\"\n}",
                                             "options": []
                                         }
                                     }
@@ -84,7 +84,7 @@
                                         },
                                         "body": {
                                             "mode": "raw",
-                                            "raw": "{\n    \"email\": \"user95@example.com\",\n    \"password\": \"sample_text\"\n}",
+                                            "raw": "{\n    \"email\": \"user64@example.com\",\n    \"password\": \"sample_text\"\n}",
                                             "options": []
                                         }
                                     }
@@ -125,6 +125,169 @@
                                     }
                                 }
                             ]
+                        }
+                    ]
+                },
+                {
+                    "name": "tasks",
+                    "item": [
+                        {
+                            "name": "[GET] api/v1/tasks",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/v1/tasks",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "v1",
+                                        "tasks"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "[POST] api/v1/tasks",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/v1/tasks",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "v1",
+                                        "tasks"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"title\": \"sample_text\",\n    \"description\": \"sample_text\",\n    \"priority\": \"sample_text\"\n}",
+                                    "options": []
+                                }
+                            }
+                        },
+                        {
+                            "name": "[GET] api/v1/tasks/{task}",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/v1/tasks/{task}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "v1",
+                                        "tasks",
+                                        "{task}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "[PUT] api/v1/tasks/{task}",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/v1/tasks/{task}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "v1",
+                                        "tasks",
+                                        "{task}"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"title\": \"sample_text\",\n    \"description\": \"sample_text\",\n    \"priority\": \"sample_text\"\n}",
+                                    "options": []
+                                }
+                            }
+                        },
+                        {
+                            "name": "[DELETE] api/v1/tasks/{task}",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/v1/tasks/{task}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "v1",
+                                        "tasks",
+                                        "{task}"
+                                    ]
+                                }
+                            }
                         }
                     ]
                 }
