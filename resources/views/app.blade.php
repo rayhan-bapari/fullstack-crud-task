@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Laravel + Vue</title>
+    <title>Task Management</title>
     @vite('resources/js/app.js')
 </head>
 

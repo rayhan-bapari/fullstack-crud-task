@@ -20,6 +20,17 @@
                     </thead>
                     <tbody>
                         <tr
+                            v-if="tasks.length === 0"
+                            class="border-b bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
+                        >
+                            <td
+                                colspan="5"
+                                class="px-6 py-4 text-center text-gray-500 dark:text-gray-400"
+                            >
+                                No data
+                            </td>
+                        </tr>
+                        <tr
                             v-for="task in tasks"
                             :key="task.id"
                             class="border-b bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -54,6 +65,12 @@
                                     class="px-3 py-1 text-xs font-medium text-white bg-green-600 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
                                 >
                                     Edit
+                                </button>
+                                <button
+                                    @click="deleteTask(task)"
+                                    class="px-3 py-1 ml-1 text-xs font-medium text-white bg-red-600 rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+                                >
+                                    Delete
                                 </button>
                             </td>
                         </tr>
@@ -311,6 +328,19 @@ async function updateTask() {
         title.value = "";
         description.value = "";
         priority.value = "";
+        fetchData();
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function deleteTask(task) {
+    try {
+        await axios.delete(`/api/v1/tasks/${task.id}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+        });
         fetchData();
     } catch (error) {
         console.error(error);
